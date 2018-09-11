@@ -1,0 +1,5 @@
+/etc/init.d/networking start
+sysctl -w net.ipv6.conf.all.forwarding=1
+radvd start
+route add -net 68.80.3.0 gw 68.80.0.254 netmask 255.255.255.0
+route -A inet6 add 2001:21:1:2103::0/64 gw 2001:23:1:21E3::1

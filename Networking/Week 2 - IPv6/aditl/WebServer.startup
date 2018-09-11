@@ -1,0 +1,2 @@
+/etc/init.d/networking start
+route add default gw 64.233.64.254
