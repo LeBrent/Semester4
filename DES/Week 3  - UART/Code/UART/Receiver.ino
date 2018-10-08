@@ -42,8 +42,4 @@ bool receiver_CheckParity(int parityBit)
   }
 }
 
-void receiver_FixData()
-{
-  
-}
 

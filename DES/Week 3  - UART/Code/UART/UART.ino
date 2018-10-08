@@ -63,7 +63,7 @@ void loop()
       }
       else
       {
-        cases = clearEverything; //wait for next byte
+        cases = clearEverything; //wait for next byte | error
       }
       
       break;
