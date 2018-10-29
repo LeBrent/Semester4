@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="MAIN" Id="{626a6be7-f420-40bf-91e1-8cc14f381bec}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	state_Fill:BOOL;
+	State_Wash:BOOL;
+	State_Rinse:BOOL;
+	State_Spin:BOOL;
+	Warmwash:BOOL;
+	timertime:TIME := T#2000MS;
+	Processtime:TON;
+	start:BOOL;
+	trigger:R_TRIG;
+	
+	step: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Your program  comes here ..... 
+Processtime(IN:=start, PT:=timertime);
+trigger(clk:=gvl_io.StartWashing);
+
+
+//case: start true dan states true, dan
+CASE step OF
+	0:
+	IF trigger.Q THEN
+		start:=TRUE;
+		state_Fill:=TRUE;
+		gvl_IO.Fill_valve:=TRUE;	
+	END_IF
+	IF Processtime.Q THEN
+		start:=FALSE;
+		state_Fill:=FALSE;
+		gvl_io.Fill_valve:= FALSE;
+		step:=step+1;
+	END_IF
+	
+	1:	
+	IF Warmwash THEN
+		timertime:=T#6000MS;
+		start:=TRUE;
+		State_Wash:=TRUE;
+		gvl_io.AgitateMotor:=TRUE;
+		gvl_io.HeaterControl:=TRUE;
+	
+	IF	Processtime.Q THEN
+		start:=FALSE;
+		gvl_io.AgitateMotor:=FALSE;
+		gvl_io.HeaterControl:=FALSE;
+		step:=step+1;
+	END_IF	
+		
+	END_IF
+	
+	IF WarmWash=FALSE THEN
+		start:=TRUE;
+	State_Wash:=TRUE;
+	gvl_io.AgitateMotor:=TRUE;
+	
+	IF	Processtime.Q THEN
+		start:=FALSE;
+		gvl_io.AgitateMotor:=FALSE;
+		step:=step+1;
+	END_IF		
+	END_IF
+
+	2:
+	timertime:=T#2000ms;
+	start:=TRUE;
+	gvl_io.Drain_valve:=TRUE;
+	gvl_io.PumpOutMotor:=TRUE;
+	
+		IF	Processtime.Q THEN
+		start:=FALSE;
+		State_Wash:=FALSE;
+		gvl_io.Drain_valve:=FALSE;
+		gvl_io.PumpOutMotor:=FALSE;
+		step:=step+1;
+	END_IF	
+	
+	3:
+	start:=TRUE;
+	State_Rinse:=TRUE;
+	gvl_io.Fill_valve:=TRUE;
+	
+		IF	Processtime.Q THEN
+		start:=FALSE;
+		gvl_io.Fill_valve:=FALSE;
+		step:=step+1;
+	END_IF	
+	
+	4:
+	start:=TRUE;
+	gvl_io.AgitateMotor:=TRUE;
+	
+		IF	Processtime.Q THEN
+		start:=FALSE;
+		gvl_io.AgitateMotor:=FALSE;
+		state_Rinse:=FALSE;
+		step:=step+1;
+	END_IF	
+	5:
+	start:=TRUE;
+	State_Spin:=TRUE;
+	gvl_io.Drain_valve := TRUE;
+	gvl_io.SpinMotor:=TRUE;
+	gvl_io.PumpOutMotor:=TRUE;
+	
+		IF	Processtime.Q THEN
+		start:=FALSE;
+		State_Spin:=FALSE;
+		gvl_io.Drain_valve:=FALSE;
+		gvl_io.SpinMotor:=FALSE;
+		gvl_io.PumpOutMotor:=FALSE;
+		step:=0;
+	END_IF	
+	
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="2" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="138" Count="2" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="141" Count="3" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="152" Count="7" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="78" Count="2" />
+      <LineId Id="82" Count="3" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="86" Count="2" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="96" Count="5" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

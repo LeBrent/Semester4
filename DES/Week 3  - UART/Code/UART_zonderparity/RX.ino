@@ -7,10 +7,11 @@ void RXTab_Receive()
   {
     for(int tempCount = 0; tempCount < 8; tempCount++)
     {
-      tempByte |= (RXPin >> 2) << tempCount;
+      tempByte |= (RXPin >> 2) << tempCount; //positioneren
       delayMicroseconds(SampleRate); //dirty delay
     }
   }
   TXTab_Transmit(tempByte);
+  
 }
 

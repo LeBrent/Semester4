@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <GVL Name="GVL_IO" Id="{b8e7c4f4-3d10-4866-babb-7474574dffdf}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	Fill_valve :BOOL;   // Fill water 
+	Drain_valve:BOOL;   // Drain
+	SpinMotor  :BOOL;   // Spin Motor
+	AgitateMotor: BOOL; // Washing
+	PumpOutMotor: BOOL; // Pump motor
+    HeaterControl: BOOL; // Optional	
+	StartWashing : BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
