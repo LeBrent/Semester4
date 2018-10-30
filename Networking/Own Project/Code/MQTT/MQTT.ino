@@ -28,8 +28,7 @@ String mqttClientId = "arduino-";
 // We subscribe to all public topics, but you could make this more specific.
 String subscribeTopic = "private/i368111/led";
 
-void callback(char* topic, byte* payload, unsigned int len) //eigen functie
-{
+void callback(char* topic, byte* payload, unsigned int len)
   String received = "";
   for (unsigned int i = 0; i < len; i++)
   {
