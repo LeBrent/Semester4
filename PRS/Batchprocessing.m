@@ -4,8 +4,8 @@
 %
 close all; 
 clearvars;                  % Clear all variables
-num=[1];                   % numerator
-den =[625 50 1];             % denumerator
+num=[1];                    % numerator
+den =[625 50 1];            % denumerator
 Gopen=tf(num,den);          % Transfer function open loop
 figure(1);                  % Create figure 1 for the step response
 step(Gopen);                % step response open loop
@@ -23,9 +23,9 @@ step(Gclose);               %  Step response
 % PID parameters modified by User = =
 % obtained by command >> pidTuner(Gopen);
 %
-Contr.Kp=18.92;               % Kp - parameter modified by User
-Contr.Ki=0.06236;               % Ki - parameter modified by User
-Contr.Kd=127.3;              % Kd - parameter modified by User
+Contr.Kp=6.902;               % Kp - parameter modified by User
+Contr.Ki=0.189;               % Ki - parameter modified by User
+Contr.Kd=63.03;              % Kd - parameter modified by User
 % Closed loop 
 Gclos2= feedback(Contr*Gopen,1);
 step(Gclos2);

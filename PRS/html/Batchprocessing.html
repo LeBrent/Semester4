@@ -1,0 +1,153 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Batchprocessing</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-11-05"><meta name="DC.source" content="Batchprocessing.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% PID controller example</span>
+<span class="comment">% 2nd Order Process / IRT005 /</span>
+<span class="comment">% O.Figaroa</span>
+<span class="comment">%</span>
+close <span class="string">all</span>;
+clearvars;                  <span class="comment">% Clear all variables</span>
+num=[1];                   <span class="comment">% numerator</span>
+den =[625 50 1];             <span class="comment">% denumerator</span>
+Gopen=tf(num,den);          <span class="comment">% Transfer function open loop</span>
+figure(1);                  <span class="comment">% Create figure 1 for the step response</span>
+step(Gopen);                <span class="comment">% step response open loop</span>
+grid <span class="string">on</span>                     <span class="comment">%</span>
+hold <span class="string">on</span>                     <span class="comment">% figure 1 on hold for next responses in the same figure</span>
+Contr= pidtune(Gopen,<span class="string">'PID'</span>);<span class="comment">% Tuning Kp, Ki and Kd</span>
+<span class="comment">%Show parameters obtained by matlab tool</span>
+X =(<span class="string">'Obtained PID parameters:'</span>);
+disp(X);
+Contr
+<span class="comment">% Closed loop with Obtained PID</span>
+Gclose= feedback(Contr*Gopen,1);
+step(Gclose);               <span class="comment">%  Step response</span>
+<span class="comment">% = = = = = = = = = = = = = = = =</span>
+<span class="comment">% PID parameters modified by User = =</span>
+<span class="comment">% obtained by command &gt;&gt; pidTuner(Gopen);</span>
+<span class="comment">%</span>
+Contr.Kp=6.902;               <span class="comment">% Kp - parameter modified by User</span>
+Contr.Ki=0.189;               <span class="comment">% Ki - parameter modified by User</span>
+Contr.Kd=63.03;              <span class="comment">% Kd - parameter modified by User</span>
+<span class="comment">% Closed loop</span>
+Gclos2= feedback(Contr*Gopen,1);
+step(Gclos2);
+title([<span class="string">'PID Controller Kp = '</span>,num2str(Contr.Kp),<span class="string">' Ki = '</span>,num2str(Contr.Ki),<span class="string">' Kd = '</span>,num2str(Contr.Kd)]);
+legend(<span class="string">'Open-loop response'</span>,<span class="string">'Standard PID response'</span>, <span class="string">'Modified PID response'</span>);
+pidTuner(Gopen);
+</pre><pre class="codeoutput">Obtained PID parameters:
+
+Contr =
+ 
+             1          
+  Kp + Ki * --- + Kd * s
+             s          
+
+  with Kp = 2.05, Ki = 0.0582, Kd = 17.5
+ 
+Continuous-time PID controller in parallel form.
+
+</pre><img vspace="5" hspace="5" src="Batchprocessing_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% PID controller example
+% 2nd Order Process / IRT005 / 
+% O.Figaroa 
+%
+close all; 
+clearvars;                  % Clear all variables
+num=[1];                   % numerator
+den =[625 50 1];             % denumerator
+Gopen=tf(num,den);          % Transfer function open loop
+figure(1);                  % Create figure 1 for the step response
+step(Gopen);                % step response open loop
+grid on                     %
+hold on                     % figure 1 on hold for next responses in the same figure
+Contr= pidtune(Gopen,'PID');% Tuning Kp, Ki and Kd
+%Show parameters obtained by matlab tool
+X =('Obtained PID parameters:');
+disp(X);
+Contr
+% Closed loop with Obtained PID
+Gclose= feedback(Contr*Gopen,1);
+step(Gclose);               %  Step response
+% = = = = = = = = = = = = = = = =
+% PID parameters modified by User = =
+% obtained by command >> pidTuner(Gopen);
+%
+Contr.Kp=6.902;               % Kp - parameter modified by User
+Contr.Ki=0.189;               % Ki - parameter modified by User
+Contr.Kd=63.03;              % Kd - parameter modified by User
+% Closed loop 
+Gclos2= feedback(Contr*Gopen,1);
+step(Gclos2);
+title(['PID Controller Kp = ',num2str(Contr.Kp),' Ki = ',num2str(Contr.Ki),' Kd = ',num2str(Contr.Kd)]);
+legend('Open-loop response','Standard PID response', 'Modified PID response');
+pidTuner(Gopen);
+
+##### SOURCE END #####
+--></body></html>
