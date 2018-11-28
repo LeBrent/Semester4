@@ -1,14 +1,6 @@
 #include <mcp_can.h>
 #include <mcp_can_dfs.h>
 
-/**************************
- *         Author         *
- *    VincentDenneman     *
- *                        *
- *        7/11/2018       *
- *                        *
- *  v.denneman@gmail.com  *
- **************************/
 
 #include <SPI.h>          //SPI is used to talk to the CAN Controller
 #include <mcp_can.h>
@@ -59,29 +51,48 @@ void loop()
         {
             Serial.write(buf[i]);     //Serial.write prints the character itself
         }
-        if (canID == 0x35) // ID = 53, Stuurwiel radio controle
+        if (canID == 0x53) // ID = 53, Stuurwiel radio controle
         {
           if (buf[0] & 0x01)
           {
             Serial.println("\n Volume up");
           }
-          else if (buf[1] & 0x01)
+          else if (buf[0] & 0x02)
           {
             Serial.println("\n Volume down");
           }
-          if (buf[2] & 0x01)
+          else if (buf[0] & 0x04)
           {
             Serial.println("\n Saved Station");
           }
-          if (buf[3] & 0x01)
+          else if (buf[0] & 0x08)
           {
             Serial.println("\n Next station");
           }
-          if (buf[4] & 0x01)
+          else if (buf[0] & 0x10)
           {
             Serial.println("\n Previous station");
           }
           
+        }
+        else if (canID == 0x52)
+        {
+          if (buf[0] & 0x01)
+          {
+            Serial.println("\n Richting kort links");
+          }
+          else if (buf[0] & 0x02)
+          {
+            Serial.println("\n Richting kort rechts");
+          }
+           else if (buf[0] & 0x01 && buf[1] & 0x01)
+          {
+            Serial.println("\n Richting lang links");
+          }
+           else if (buf[0] & 0x02 && buf[1] & 0x01)
+          {
+            Serial.println("\n Richting lang rechts");
+          }
         }
         Serial.println("\n\t*****************\n");
     }
