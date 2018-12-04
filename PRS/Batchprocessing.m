@@ -23,12 +23,14 @@ step(Gclose);               %  Step response
 % PID parameters modified by User = =
 % obtained by command >> pidTuner(Gopen);
 %
-Contr.Kp=6.902;               % Kp - parameter modified by User
+Contr.Kp=7.902;               % Kp - parameter modified by User
 Contr.Ki=0.189;               % Ki - parameter modified by User
 Contr.Kd=63.03;              % Kd - parameter modified by User
+
+
 % Closed loop 
 Gclos2= feedback(Contr*Gopen,1);
 step(Gclos2);
 title(['PID Controller Kp = ',num2str(Contr.Kp),' Ki = ',num2str(Contr.Ki),' Kd = ',num2str(Contr.Kd)]);
 legend('Open-loop response','Standard PID response', 'Modified PID response');
-pidTuner(Gopen);
+pidTuner(Gopen);    
